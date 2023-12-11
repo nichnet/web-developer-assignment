@@ -55,9 +55,18 @@ html, body {
     padding: 12px 0;
 }
 
+.rounded {
+    border-radius: 8px;
+}
+
 /* Book Table */
 table {
     width: 100%;
-    border: 1px solid #636b6f;
-    border-radius: 6px;
+    border: 1px solid #cbcbcb;
+}
+
+/* Book Form */
+form {
+    padding: 12px;
+    background-color: #e2e2e2;
 }
