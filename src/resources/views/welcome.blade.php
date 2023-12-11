@@ -10,10 +10,10 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
         <!-- Styles -->
-        <link rel="stylesheet" href="{{asset('styles.css')}}">
+        <link rel="stylesheet" href="{{ asset('styles.css') }}">
     </head>
     <body>
-        <div class="flex-center position-ref full-height">
+        <div class="container full-height">
             <div class="content">
                 @include('books_table')
             </div>
