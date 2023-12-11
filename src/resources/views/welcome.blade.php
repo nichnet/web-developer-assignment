@@ -15,7 +15,9 @@
     <body>
         <div class="container full-height">
             <div class="content">
-                @include('books_table')
+                @include('books_form')
+                @include('books_table', ['books' => $books])
+                <p>{{$total}} {{$total == 1 ? "Book" : "Books"}}</p>
             </div>
         </div>
     </body>
