@@ -15,39 +15,11 @@ use App\Models\Book;
 |
 */
 
-Route::get('/', function (Request $request) {
-    $limit = 5;
-    
-    $page = $request->input('page');
+Route::get('/', [BookController::class, 'index'])
+    ->name('paginated.content');
 
-    if ($page !== null) {
-        // Eensure $page is an interger (not char), and 
-        // if it's a digit already, ensure its positive for user-ease (readability).
-        if(!ctype_digit($page)) {
-            $page = 1;
-        } else {
-            $page = max((int) $page, 1); 
-        }
 
-        // Since offset pagination will begin at 0, subtract 1.
-        $offset = ($page - 1) * $limit;
-        $books = Book::offset($offset)->limit($limit)->get();
-    } else {
-        //Retrieve all books if $page isn't set.
-        $books = Book::all();
-    }
-    return view('welcome', 
-        [
-            'books' => $books,
-            'total' => getTotalBooksCount()
-        ]
-    );
-});
-
-/**
- * Function to get the total number of books in the database.
- * @returns int
- */
-function getTotalBooksCount() {
-    return Book::count();
-}
+Route::post('/store', [BookController::class, 'store'])->name('books.store');
+Route::get('/create', [BookController::class, 'create'])->name('books.create');
+Route::delete('/destroy/{id}', [BookController::class, 'destroy'])->name('books.destroy');
+Route::get('/export', [BookController::class, 'handleExport'])->name('books.export');
