@@ -29,9 +29,9 @@
                 <div style="display: flex">
                     <form action="{{ route('paginated.content') }}" method="get" style="display: inline-block;">
                         <input type="text" name="query" placeholder="Search..." value="{{ $query }}" />
-                        <select style="margin-left: 12px" class="border">
-                            <option>Sort by Title</option>
-                            <option>Sort by Author</option>
+                        <select name="sort" style="margin-left: 12px" class="border" onchange="submit()">
+                            <option value="0" {{ $sort === '0' ? "selected" : '' }}>Sort by Title</option>
+                            <option value="1" {{ $sort === '1' ? 'selected' : '' }}>Sort by Author</option>
                         </select>
                     </form>
 

@@ -18,6 +18,11 @@
                     <option value="1">Only Titles</option>
                     <option value="2">Only Authors</option>
                 </select>
+                <label>Sort</label>
+                <select name="sort" class="border" style="width: 100%; max-width: 200px;">
+                    <option value="0">Sort by Title</option>
+                    <option value="1">Sort by Author</option>
+                </select>
             </div>
             <div style="display:flex; flex-direction: column; margin: 12px">
                 <label>File Type</label>

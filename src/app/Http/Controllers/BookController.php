@@ -27,20 +27,22 @@ class BookController extends Controller {
     public function index(Request $request) {
         $page = $request->input('page');
         $query = $request->input('query');
+        $sort = $request->input('sort');
 
         // Clamp and redirect the page if necessary.
         if ($page === null || $page < 1 || $page > $this->getTotalPages($query)) {
-            return redirect()->route('paginated.content', ['query'=>$query, 'page'=>max(1, min($page, $this->getTotalPages($query)))]);
+            return redirect()->route('paginated.content', ['query'=>$query, 'sort'=>$sort, 'page'=>max(1, min($page, $this->getTotalPages($query)))]);
         }
 
         // Get the books for this page.
-        $books = $this->getBooksFromPage($page, $query);
+        $books = $this->getBooks($page, $sort, $query);
 
         return view('welcome', 
             [
                 'books' => $books,
                 'total_books' => $this->getTotalBooksCount($query),
                 'query' => $query,
+                'sort' => $sort,
                 'page' => (object) [
                     'current_page'=> $page,
                     'total_pages' => $this->getTotalPages($query)
@@ -109,14 +111,17 @@ class BookController extends Controller {
         return redirect()->back()->with('result', 'error_unknown');
     }
 
-    public function changePage(Reuest $request, $page, $query = null) {
+    /* FIXME REMOVE
+    public function changePage(Reuest $request, $page, $sort = 0, $query = null) {
         if($query === null) {
-            return redirect()->route('books.index', ['page'=>$page]);
+            return redirect()->route('books.index', ['sort'=>$sort, 'page'=>$page]);
         } else {
-            return redirect()->route('books.search', ['query'=>$query, 'page'=>$page]);
+            return redirect()->route('books.search', ['query'=>$query, 'sort'=>$sort, 'page'=>$page]);
         }
     }
-    
+    */
+
+
     /**
      * Handle the export of books based on user submitted form.
      * @param  \Illuminate\Http\Request $request
@@ -124,6 +129,7 @@ class BookController extends Controller {
      */
     public function handleExport(Request $request) {
         $query = $request->input('query');
+        $sort = $request->input('sort'); 
         $currentPage = $request->input('currentPage');
         $exportAllPages = $request->input('exportAllPages') === 'true';
 
@@ -146,7 +152,7 @@ class BookController extends Controller {
         $boks = [];
 
         // Fetch the current page or all pages.
-        $books = $this->getBooksFromPage($exportAllPages ? null : $currentPage, $query);
+        $books = $this->getBooks($exportAllPages ? null : $currentPage, $sort, $query);
 
         $fileData = $this->generateFileData($books, $options, $exportAsCSV);
 
@@ -194,9 +200,25 @@ class BookController extends Controller {
      * @param string $query The search query
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    function getBooksFromPage($page = null, $query = null) {
+    function getBooks($page = null, $sort = 0, $searchQuery = null) {
         $queryBuilder = Book::query();
-        
+    
+        // Search query.
+        if($searchQuery) {
+            $queryBuilder->where('title', 'like', '%' . $searchQuery . '%')
+                         ->orWhere('author', 'like', '%' . $searchQuery . '%');
+        }
+
+        // Sort, default is 0 (Title).
+        $sortField = 'title'; 
+
+        if ($sort != 0) {
+            $sortField = 'author';
+        }
+
+        $queryBuilder->orderBy($sortField);
+
+        // Pagination
         if($page) {
             // Eensure $page is an interger (not char), and 
             // if it's a digit already, ensure its positive for user-ease (readability).
@@ -207,7 +229,7 @@ class BookController extends Controller {
             }
 
             // Ensure the requested page isn't more than the total pages.
-            $page = min((int) $page, $this->getTotalPages($query)); 
+            $page = min((int) $page, $this->getTotalPages($searchQuery)); 
 
             // Since offset pagination will begin at 0, subtract 1.
             $offset = ($page - 1) * $this->pageSize;
@@ -215,11 +237,8 @@ class BookController extends Controller {
             $queryBuilder->offset($offset)->limit($this->pageSize);
         }
         
-        if($query) {
-            $queryBuilder->where('title', 'like', '%' . $query . '%')
-                         ->orWhere('author', 'like', '%' . $query . '%');
-        }
-        
+
+        // Finally return.
         return $queryBuilder->get();
     }
 
