@@ -163,7 +163,7 @@ class BookController extends Controller {
         }
 
         // Create download payload and headers
-        $fileName = "books.$extensionType";
+        $fileName = "books-$sort.$extensionType";
         $headers = [
             'Content-Type'=>"text/$extensionType; charset=UTF-8", ///UTF-8 for character support (eg Japanese).
             'Content-Disposition'=>"attachment; filename=$fileName"
@@ -216,7 +216,7 @@ class BookController extends Controller {
             $sortField = 'author';
         }
 
-        $queryBuilder->orderBy($sortField);
+        $queryBuilder->orderBy($sortField, 'desc');
 
         // Pagination
         if($page) {
