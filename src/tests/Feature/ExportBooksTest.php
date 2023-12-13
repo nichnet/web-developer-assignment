@@ -10,7 +10,7 @@ use App\Models\Book;
 class ExportBooksTest extends TestCase {
     
     public function __construct() {
-        parent::__construct(); // Make sure to call the parent constructor
+        parent::__construct();
         // Ensure there are some books in the database already.
         for($i = 0; $i < 5; $i++) {
             // Randomly generate a title and author so that it is ensured not to exist.
