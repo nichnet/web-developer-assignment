@@ -46,7 +46,7 @@ html, body {
     color: #c9c9c9;
 }
 
-/* Book Table */
+/* Tables */
 table {
     table-layout: auto;
     width: 100%;
@@ -74,23 +74,9 @@ tbody tr:nth-child(odd) {
 
 tbody tr:hover {
     background-color: #d0d0d0;
-    cursor: pointer;
 }
 
-/* Forms */
-input[type="text"], select {
-    padding: 8px;
-    background-color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    border: 1px solid #cbcbcb !important;
-}
-
-label {
-    margin-top: 8px;
-}
-
-
+/* Buttons */
 .input[type="submit"], button, .button {
     text-decoration: none;
     background-color: #190c8d;
@@ -106,6 +92,18 @@ label {
     margin-right: 6px;
 }
 
+/* Forms */
+input[type="text"], select {
+    padding: 8px;
+    background-color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    border: 1px solid #cbcbcb !important;
+}
+
+label {
+    margin-top: 8px;
+}
 
 /* Modals */
 .modal {
