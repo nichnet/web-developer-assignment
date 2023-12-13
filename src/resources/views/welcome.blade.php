@@ -59,11 +59,11 @@
             </div>
     
             <p style="text-align: center; margin: 12px;">
-                <a href="{{ route('index', ['page'=>1, 'query'=>$query]) }}" class="{{ $page->current_page <= 1 ? 'disabled-link' : '' }}">First</a>
-                <a href="{{ route('index', ['page'=>$page->current_page - 1, 'query'=>$query]) }}" class="{{ $page->current_page <= 1 ? 'disabled-link' : '' }}">Prev</a>
+                <a href="{{ route('index', ['page'=>1, 'query'=>$query, 'sort'=>$sort]) }}" class="{{ $page->current_page <= 1 ? 'disabled-link' : '' }}">First</a>
+                <a href="{{ route('index', ['page'=>$page->current_page - 1, 'query'=>$query, 'sort'=>$sort]) }}" class="{{ $page->current_page <= 1 ? 'disabled-link' : '' }}">Prev</a>
                 - {{ $page->current_page }} of {{ $page->total_pages }} - 
-                <a href="{{ route('index', ['page'=>$page->current_page + 1, 'query'=>$query]) }}" class="{{ $page->current_page >= $page->total_pages ? 'disabled-link' : '' }}">Next</a>
-                <a href="{{ route('index', ['page'=>$page->total_pages, 'query'=>$query]) }}" class="{{ $page->current_page >= $page->total_pages ? 'disabled-link' : '' }}">Last</a>
+                <a href="{{ route('index', ['page'=>$page->current_page + 1, 'query'=>$query, 'sort'=>$sort]) }}" class="{{ $page->current_page >= $page->total_pages ? 'disabled-link' : '' }}">Next</a>
+                <a href="{{ route('index', ['page'=>$page->total_pages, 'query'=>$query, 'sort'=>$sort]) }}" class="{{ $page->current_page >= $page->total_pages ? 'disabled-link' : '' }}">Last</a>
             </p>
         </div>
 
