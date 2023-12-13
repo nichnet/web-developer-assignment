@@ -16,7 +16,7 @@
 
         @include('modal_message')
         @include('modal_compose_book')
-        @include('modal_export', ['total_books' => $total_books])
+        @include('modal_export', ['total_books'=>$total_books, 'query'=>$query])
 
         <div class="container">
 
@@ -72,38 +72,34 @@
         @if(session()->has('result'))
             <script>
                 // Display an alert upon successful book addition
-                window.onload = function() {
-                    let result = @json(session('result'));
-                    console.log(result);
 
-                        let msg = "";
-
-                        switch(result) {
-                            case('success_created'):
-                                msg = "Book added successfully!";
-                                break;            
-                            case('success_updated'):
-                                msg = "The book has been updated!";
-                                break;
-                            case('success_deleted'):
-                                msg = "Book deleted successfully!";
-                                break;            
-                            case('error_duplicate'):
-                                msg = "This book already exists!";
-                                break;        
-                            case('error_not_found'):
-                                msg = "The book couldn't be found!";
-                                break;        
-                            default:
-                                msg = "Something went wrong!";
-                                break;    
-                        }
- 
-                        // Show the modal.
-                        showMessageModal("Message", msg);
-
+                let response = @json(session('result'));
+                let msg = "";
+                switch(response) {
+                    case('success_created'):
+                        msg = "Book added successfully!";
+                        break;            
+                    case('success_updated'):
+                        msg = "The book has been updated!";
+                        break;
+                    case('success_deleted'):
+                        msg = "Book deleted successfully!";
+                        break;            
+                    case('error_duplicate'):
+                        msg = "This book already exists!";
+                        break;        
+                    case('error_not_found'):
+                        msg = "The book couldn't be found!";
+                        break;        
+                    default:
+                        msg = "Something went wrong!";
+                        break;    
                 }
+
+                // Show the modal.
+                showMessageModal("Message", msg);
             </script>
         @endif
+
     </body>
 </html>
