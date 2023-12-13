@@ -10,6 +10,9 @@ use App\Models\Book;
  */
 class BookController extends Controller {
 
+    /**
+     * Size of a page of books.
+     */
     protected $pageSize;
 
     public function __construct() {
@@ -52,7 +55,7 @@ class BookController extends Controller {
     }
 
     /**
-     * Stored a new book entry in the database or updates an existing one if an ID is present in the form data.  
+     * Stores a new book entry in the database or updates an existing one if an ID is present in the form data.  
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -79,7 +82,7 @@ class BookController extends Controller {
                     $book->update($data);
                     return redirect()->back()->with('result', 'success_updated');
                 } else {
-                    return redirect()->back()->with('result', 'error_not_found' . ' \'' . $request->input('id') . '\'');
+                    return redirect()->back()->with('result', 'error_not_found');
                 }
             } else {
                 Book::create($data);
@@ -90,7 +93,8 @@ class BookController extends Controller {
                 // Handle constraint violation (unique title & author)
                 return redirect()->back()->with('result', 'error_duplicate');
             }
-            return redirect()->back()->with('result', 'error_unknown' . $e->getCode());
+
+            return redirect()->back()->with('result', 'error_unknown');
         }
     }
     
@@ -110,17 +114,6 @@ class BookController extends Controller {
     
         return redirect()->back()->with('result', 'error_unknown');
     }
-
-    /* FIXME REMOVE
-    public function changePage(Reuest $request, $page, $sort = 0, $query = null) {
-        if($query === null) {
-            return redirect()->route('books.index', ['sort'=>$sort, 'page'=>$page]);
-        } else {
-            return redirect()->route('books.search', ['query'=>$query, 'sort'=>$sort, 'page'=>$page]);
-        }
-    }
-    */
-
 
     /**
      * Handle the export of books based on user submitted form.
@@ -172,23 +165,28 @@ class BookController extends Controller {
         return response($fileData, 200, $headers);
     }
 
-    function getTotalPages($query) {
+    /**
+     * Returns the total pages.
+     * @param  string $searchQuery Optional search query when determinging the amount of pages.  
+     * @return int
+     */
+    function getTotalPages($searchQuery = null) {
         // Use max(1, x) because getTotalBooksCount may return 0. It needs at least 1 page.
-        return max(1, ceil($this->getTotalBooksCount($query) / $this->pageSize));
+        return max(1, ceil($this->getTotalBooksCount($searchQuery) / $this->pageSize));
     }
 
     /**
-     * Returns the total number of books in the database. If $query is present, restricts the total to those that match.
-     * @param string $query 
+     * Returns the total number of books in the database. If $searchQuery is present, restricts the total to those that match.
+     * @param string $searchQuery Optional search query (titles/authors).
      * @returns int
      */
-    function getTotalBooksCount($query) {
+    function getTotalBooksCount($searchQuery = null) {
         $queryBuilder = Book::query();
 
-        if ($query !== null) {
+        if ($searchQuery !== null) {
             // Add a WHERE clause to filter by the query
-            $queryBuilder->where('title', 'like', '%' . $query . '%')
-                        ->orWhere('author', 'like', '%' . $query . '%');
+            $queryBuilder->where('title', 'like', '%' . $searchQuery . '%')
+                        ->orWhere('author', 'like', '%' . $searchQuery . '%');
         }
 
         return $queryBuilder->count();
@@ -203,7 +201,7 @@ class BookController extends Controller {
     function getBooks($page = null, $sort = 0, $searchQuery = null) {
         $queryBuilder = Book::query();
     
-        // Search query.
+        // Add the search query to the SQL query.
         if($searchQuery) {
             $queryBuilder->where('title', 'like', '%' . $searchQuery . '%')
                          ->orWhere('author', 'like', '%' . $searchQuery . '%');
@@ -216,7 +214,7 @@ class BookController extends Controller {
             $sortField = 'author';
         }
 
-        $queryBuilder->orderBy($sortField, 'desc');
+        $queryBuilder->orderBy($sortField, 'asc');
 
         // Pagination
         if($page) {
@@ -242,6 +240,13 @@ class BookController extends Controller {
         return $queryBuilder->get();
     }
 
+    /**
+     * Hellper function to generate file data based on the provided books array and options, and exports it as either CSV or XML.
+     * @param array $books The selected books to export.
+     * @param int $options An int representing the data to include in the export (0=titles/authors, 1=titles, 2=authors).
+     * @param bool $exportAsCSV Indicates whether to export the data as CSV (true) or XML (false).
+     * @return string The generated file data in the selected format.
+     */
     function generateFileData($books, $options, $exportAsCSV) {
         $includeTitles = true;
         $includeAuthors = true;
