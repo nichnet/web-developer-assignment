@@ -1,5 +1,5 @@
 # Web Dev Assignment
-![Demo](https://github.com/nichnet/web-developer-assignment/assets/19955751/05ee8d5f-eccd-485a-aa1f-5941c02b471f)
+![Demo](https://github.com/nichnet/web-developer-assignment/blob/main/images/screenshot.png)
 
 ## Requirements 
 Ensure that [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) are installed on your system. 
@@ -48,3 +48,7 @@ Tests include:
     - A list with Title and Author
     - A list with only Titles
     - A list with only Authors
+
+## Demo Details
+Ideal AWS architecture would be as follows:
+![AWS Architecture](https://github.com/nichnet/web-developer-assignment/blob/main/images/architecture.png)
