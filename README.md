@@ -49,6 +49,6 @@ Tests include:
     - A list with only Titles
     - A list with only Authors
 
-## Demo Details
-Ideal AWS architecture would be as follows:
+## Hosting Architecture
+I am hosting the demo on AWS. An ideal architecture diagram would be as follows:
 ![AWS Architecture](https://github.com/nichnet/web-developer-assignment/blob/main/images/architecture.png)
