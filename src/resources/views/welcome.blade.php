@@ -27,7 +27,7 @@
 
             <div style="margin: 12px 0; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
                 <div style="display: flex">
-                    <form action="{{ route('paginated.content') }}" method="get" style="display: inline-block;">
+                    <form action="{{ route('index') }}" method="get" style="display: inline-block;">
                         <input type="text" name="query" placeholder="Search..." value="{{ $query }}" />
                         <select name="sort" style="margin-left: 4px" class="border" onchange="submit()">
                             <option value="0" {{ $sort === '0' ? "selected" : '' }}>Sort by Title</option>
@@ -59,11 +59,11 @@
             </div>
     
             <p style="text-align: center; margin: 12px;">
-                <a href="{{ route('paginated.content', ['page'=>1, 'query'=>$query]) }}" class="{{ $page->current_page <= 1 ? 'disabled-link' : '' }}">First</a>
-                <a href="{{ route('paginated.content', ['page'=>$page->current_page - 1, 'query'=>$query]) }}" class="{{ $page->current_page <= 1 ? 'disabled-link' : '' }}">Prev</a>
+                <a href="{{ route('index', ['page'=>1, 'query'=>$query]) }}" class="{{ $page->current_page <= 1 ? 'disabled-link' : '' }}">First</a>
+                <a href="{{ route('index', ['page'=>$page->current_page - 1, 'query'=>$query]) }}" class="{{ $page->current_page <= 1 ? 'disabled-link' : '' }}">Prev</a>
                 - {{ $page->current_page }} of {{ $page->total_pages }} - 
-                <a href="{{ route('paginated.content', ['page'=>$page->current_page + 1, 'query'=>$query]) }}" class="{{ $page->current_page >= $page->total_pages ? 'disabled-link' : '' }}">Next</a>
-                <a href="{{ route('paginated.content', ['page'=>$page->total_pages, 'query'=>$query]) }}" class="{{ $page->current_page >= $page->total_pages ? 'disabled-link' : '' }}">Last</a>
+                <a href="{{ route('index', ['page'=>$page->current_page + 1, 'query'=>$query]) }}" class="{{ $page->current_page >= $page->total_pages ? 'disabled-link' : '' }}">Next</a>
+                <a href="{{ route('index', ['page'=>$page->total_pages, 'query'=>$query]) }}" class="{{ $page->current_page >= $page->total_pages ? 'disabled-link' : '' }}">Last</a>
             </p>
         </div>
 
@@ -71,33 +71,37 @@
 
         @if(session()->has('result'))
             <script>
-                // Display a browser alert upon successful book addition
+                // Display an alert upon successful book addition
                 window.onload = function() {
                     let result = @json(session('result'));
-                    let msg = "";
-                    switch(result) {
-                        case('success_created'):
-                            msg = "Book added successfully!";
-                            break;            
-                        case('success_updated'):
-                            msg = "The book has been updated!";
-                            break;
-                        case('success_deleted'):
-                            msg = "Book deleted successfully!";
-                            break;            
-                        case('error_duplicate'):
-                            msg = "This book already exists!";
-                            break;        
-                        case('error_not_found'):
-                            msg = "The book couldn't be found!";
-                            break;        
-                        default:
-                            msg = "Something went wrong!";
-                            break;    
-                    }
+                    console.log(result);
 
-                    // Show the modal
-                    showMessageModal("Message", msg);
+                        let msg = "";
+
+                        switch(result) {
+                            case('success_created'):
+                                msg = "Book added successfully!";
+                                break;            
+                            case('success_updated'):
+                                msg = "The book has been updated!";
+                                break;
+                            case('success_deleted'):
+                                msg = "Book deleted successfully!";
+                                break;            
+                            case('error_duplicate'):
+                                msg = "This book already exists!";
+                                break;        
+                            case('error_not_found'):
+                                msg = "The book couldn't be found!";
+                                break;        
+                            default:
+                                msg = "Something went wrong!";
+                                break;    
+                        }
+ 
+                        // Show the modal.
+                        showMessageModal("Message", msg);
+
                 }
             </script>
         @endif

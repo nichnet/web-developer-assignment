@@ -15,7 +15,7 @@ use App\Models\Book;
 |
 */
 
-Route::get('/', [BookController::class, 'index'])->name('paginated.content');
+Route::get('/', [BookController::class, 'index'])->name('index');
 Route::post('/store', [BookController::class, 'store'])->name('books.store');
 Route::get('/create', [BookController::class, 'create'])->name('books.create');
 Route::delete('/destroy/{id}', [BookController::class, 'destroy'])->name('books.destroy');
