@@ -12,7 +12,7 @@ If you wish to install [Docker Desktop](https://docs.docker.com/desktop/) instea
 - Clone the repository
 - Start the containers by running `docker-compose up -d` in the project root
 - Install the composer packages by running `docker-compose exec laravel composer install`
-- Populate the database with the required tables by running the migrations command `docker exec -it assignment01 php artisan migrate`
+- Populate the database with the required tables by running the migrations command `docker exec -it assignment01-laravel php artisan migrate`
 - Access the Laravel instance on `http://localhost` (If there is a "Permission denied" error, run `docker-compose exec laravel chown -R www-data storage`)
 
 ### Persistent Database
