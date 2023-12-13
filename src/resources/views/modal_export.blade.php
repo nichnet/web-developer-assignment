@@ -3,11 +3,11 @@
     <div class="modal-content rounded">
         <span class="close" id="btnCloseModal">&times;</span>
         <h4 style="margin: 0">Export File</h4>
-        <form method="get" action="{{route('books.export')}}">
+        <form method="get" action="{{ route('books.export') }}">
             <input type="hidden" name="query" value="{{ $query }}">
             <input type="hidden" name="currentPage" value="{{ $page->current_page }}">
             <div style="display:flex; flex-direction: column; margin: 12px">
-                <label>Books</label>
+                <label>Books <i>{{ $query ? '(matching query: "' . $query . '")' : '' }}</i></label>
                 <label for="exportAllPages"><input type="radio"  id="exportAllPages" name="exportAllPages" value="true" checked/>All ({{$total_books}}) Books</label>
                 <label for="exportCurrentPage"><input type="radio" id="exportCurrentPage" name="exportAllPages" value="false"/>This Page Only</label>
             </div>
