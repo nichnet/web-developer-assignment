@@ -32,7 +32,15 @@ Then run the following command:
 `docker-compose stop \ && docker-compose rm -f mysql \ && docker-compose up -d`
 
 ## Testing
-Run the unit tests by running ``
+Run the unit tests by running `docker exec -it assignment01-laravel php ./vendor/bin/phpunit tests`
+
+Tests include:
+- Add a book
+- Delete a book
+- Update a book
+- Sorting by title or author
+- Searching for a book or title
+- Exporting as CSV or XML
 
 ## Features
 - Add, edit, and delete a book from the list
