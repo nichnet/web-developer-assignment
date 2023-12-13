@@ -34,21 +34,27 @@ class BookController extends Controller {
 
         // Clamp and redirect the page if necessary.
         if ($page === null || $page < 1 || $page > $this->getTotalPages($query)) {
-            return redirect()->route('paginated.content', ['query'=>$query, 'sort'=>$sort, 'page'=>max(1, min($page, $this->getTotalPages($query)))]);
+            return redirect()->route('index', [
+                'query'=>$query, 
+                'sort'=>$sort, 
+                'page'=>max(1, min($page, $this->getTotalPages($query)))
+            ]);
         }
 
         // Get the books for this page.
         $books = $this->getBooks($page, $sort, $query);
 
+
+        // Return the view. 
         return view('welcome', 
             [
-                'books' => $books,
-                'total_books' => $this->getTotalBooksCount($query),
-                'query' => $query,
-                'sort' => $sort,
-                'page' => (object) [
-                    'current_page'=> $page,
-                    'total_pages' => $this->getTotalPages($query)
+                'books'=>$books,
+                'total_books' =>$this->getTotalBooksCount($query),
+                'query'=>$query,
+                'sort'=>$sort,
+                'page'=>(object) [
+                    'current_page'=>$page,
+                    'total_pages' =>$this->getTotalPages($query)
                 ]
             ]
         );
@@ -60,6 +66,10 @@ class BookController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request) {
+        $existingId = $request->input('id');
+
+        $responseMessage = 'none';
+
         try {
             // Validate the incoming form data
             $request->validate([
@@ -72,32 +82,31 @@ class BookController extends Controller {
                 'author' => $request->input('author'),
             ];
 
-            $existingId = $request->input('id');
-
             // Check if ID is present, and update exsiting if so.
-            if($existingId) {
+            if ($existingId) {
                 $book = Book::find($request->input('id'));
 
-                if($book) {
+                if($book) { 
                     $book->update($data);
-                    return redirect()->back()->with('result', 'success_updated');
+                    $responseMessage = 'success_updated';
                 } else {
-                    return redirect()->back()->with('result', 'error_not_found');
+                    $responseMessage = 'error_not_found';
                 }
             } else {
                 Book::create($data);
-                return redirect()->back()->with('result', 'success_created');
+                $responseMessage = 'success_created';
             }
         } catch(\Exception $e) {
             if ($e->getCode() === '23000') {
                 // Handle constraint violation (unique title & author)
-                return redirect()->back()->with('result', 'error_duplicate');
+                $responseMessage = 'error_duplicate';
+            } else {
+                $responseMessage = 'error_unknown';
             }
-
-            return redirect()->back()->with('result', 'error_unknown');
+        } finally {
+            return redirect()->back()->with('result', $responseMessage);
         }
     }
-    
 
     /**
      * Delete a book by ID.
@@ -156,7 +165,7 @@ class BookController extends Controller {
         }
 
         // Create download payload and headers
-        $fileName = "books-$sort.$extensionType";
+        $fileName = "books.$extensionType";
         $headers = [
             'Content-Type'=>"text/$extensionType; charset=UTF-8", ///UTF-8 for character support (eg Japanese).
             'Content-Disposition'=>"attachment; filename=$fileName"
