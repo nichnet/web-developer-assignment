@@ -78,8 +78,8 @@ class BookController extends Controller {
             ]);
 
             $data = [
-                'title' => $request->input('title'),
-                'author' => $request->input('author'),
+                'title' => addslashes($request->input('title')),
+                'author' => addslashes($request->input('author')),
             ];
 
             // Check if ID is present, and update exsiting if so.

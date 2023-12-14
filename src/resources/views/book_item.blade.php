@@ -1,8 +1,8 @@
 <!-- Book Item Row -->
 <tr>
     <!-- Conditional Formatting, bold based on sorting type. -->
-    <td>{!! $sort == 0 ? '<b>' . $book->title . '</b>' : $book->title !!}</td>
-    <td>{!! $sort == 1 ? '<b>' . $book->author . '</b>' : $book->author !!}</td>
+    <td>{!! $sort == 0 ? '<b>' . @e($book->title) . '</b>' : @e($book->title) !!}</td>
+    <td>{!! $sort == 1 ? '<b>' . @e($book->author) . '</b>' : @e($book->author) !!}</td>
     <td>
         <button class="green" onclick="showComposeBookModal({{ json_encode($book->id) }}, {{ json_encode($book->title) }}, {{json_encode($book->author) }});">Edit</button>
     </td>
